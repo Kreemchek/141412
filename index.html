@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор Юнит-Экономики</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-calculator"></i> Калькулятор Юнит-Экономики</h1>
+            <p>Расчет прибыльности товара на Wildberries</p>
+            <div class="author-info">
+                <p><i class="fab fa-telegram"></i> Автор: <a href="https://t.me/MaksimovWB" target="_blank">@MaksimovWB</a></p>
+            </div>
+        </header>
+
+        <div class="calculator-grid">
+            <!-- Левая колонка - Ввод данных -->
+            <div class="input-section">
+                <h2><i class="fas fa-edit"></i> Ввод данных</h2>
+                
+                <div class="form-group">
+                    <label for="units-sold">Продано единиц</label>
+                    <input type="number" id="units-sold" placeholder="Введите количество" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="logistics">Логистика ВБ (руб.)</label>
+                    <input type="number" id="logistics" placeholder="0.00" step="0.01" min="0">
+                    <small>Зависит от ФБО/ФБС, категории и товара</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="fulfillment">Фулфилмент (руб.)</label>
+                    <input type="number" id="fulfillment" placeholder="0.00" step="0.01" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="wb-commission">Комиссия ВБ (%)</label>
+                    <input type="number" id="wb-commission" placeholder="15.5" step="0.1" min="0" max="100">
+                    <small>Пример: 15.5% = 15.5</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="storage-cost">Стоимость хранения ВБ (руб.)</label>
+                    <input type="number" id="storage-cost" placeholder="0.00" step="0.01" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="advertising">Реклама (руб.)</label>
+                    <input type="number" id="advertising" placeholder="0.00" step="0.01" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="purchase-price">Закупочная цена товара (руб.)</label>
+                    <input type="number" id="purchase-price" placeholder="0.00" step="0.01" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="selling-price">Цена продажи (руб.)</label>
+                    <input type="number" id="selling-price" placeholder="0.00" step="0.01" min="0">
+                    <small>Розничная цена на ВБ</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="redemption-rate">Процент выкупа (%)</label>
+                    <input type="number" id="redemption-rate" placeholder="85" step="0.1" min="0" max="100">
+                </div>
+
+                <button class="calculate-btn" onclick="calculateEconomics()">
+                    <i class="fas fa-calculator"></i> Рассчитать
+                </button>
+            </div>
+
+            <!-- Правая колонка - Результаты -->
+            <div class="results-section">
+                <h2><i class="fas fa-chart-line"></i> Результаты расчетов</h2>
+                
+                <div class="results-grid">
+                    <div class="result-card">
+                        <h3>Фиксированные параметры</h3>
+                        <div class="result-item">
+                            <span>Эквайринг:</span>
+                            <span class="value">2.5%</span>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>Налогообложение</h3>
+                        <div class="result-item">
+                            <span>5%:</span>
+                            <span class="value" id="tax-5">0.00 руб.</span>
+                        </div>
+                        <div class="result-item">
+                            <span>7%:</span>
+                            <span class="value" id="tax-7">0.00 руб.</span>
+                        </div>
+                        <div class="result-item">
+                            <span>2%:</span>
+                            <span class="value" id="tax-2">0.00 руб.</span>
+                        </div>
+                    </div>
+
+                    <div class="result-card profit-card">
+                        <h3>Прибыль</h3>
+                        <div class="result-item">
+                            <span>При 5%:</span>
+                            <span class="value profit" id="profit-5">0.00 руб.</span>
+                        </div>
+                        <div class="result-item">
+                            <span>При 7%:</span>
+                            <span class="value profit" id="profit-7">0.00 руб.</span>
+                        </div>
+                        <div class="result-item">
+                            <span>При 2%:</span>
+                            <span class="value profit" id="profit-2">0.00 руб.</span>
+                        </div>
+                    </div>
+
+                    <div class="result-card metrics-card">
+                        <h3>Ключевые метрики</h3>
+                        <div class="result-item">
+                            <span>Маржинальность:</span>
+                            <span class="value" id="margin">0.00%</span>
+                        </div>
+                        <div class="result-item">
+                            <span>Рентабельность:</span>
+                            <span class="value" id="profitability">0.00%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <h3><i class="fas fa-info-circle"></i> Сводка по единице товара</h3>
+                    <div id="unit-summary">
+                        <p>Заполните данные для расчета</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2024 Калькулятор Юнит-Экономики для Wildberries</p>
+            <p>Создано <a href="https://t.me/MaksimovWB" target="_blank">@MaksimovWB</a> для оптимизации бизнеса на маркетплейсах</p>
+        </footer>
+    </div>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
